@@ -1,0 +1,15 @@
+# Cache from sync_issues.py — fetched issue/PR/diff data, 6h TTL
+.cache/
+
+# Generated triage output — point-in-time, not tracked
+ISSUES.md
+TRIAGE.md
+
+# Python
+__pycache__/
+*.pyc
+
+# Editors
+.idea/
+.vscode/
+*.swp
