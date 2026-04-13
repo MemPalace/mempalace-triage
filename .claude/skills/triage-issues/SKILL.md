@@ -115,6 +115,13 @@ Produce **Top 10 actions** the maintainer should take next. Rank by
 
 ### Step 6 — Write `TRIAGE.md`
 
+**Every issue or PR reference must be a markdown link to GitHub.** Use the
+format `[#NNN](https://github.com/MemPalace/mempalace/issues/NNN)` — GitHub
+redirects `/issues/NNN` to `/pull/NNN` automatically when the number is a
+PR, so one URL pattern covers both. This applies to the TL;DR, severity
+tables, cluster lists, PR triage, and next-action lines — anywhere you
+name an issue or PR.
+
 Structure:
 
 ```markdown
@@ -126,18 +133,19 @@ Structure:
 ## TL;DR
 
 3-5 bullets. What needs attention this week. Be specific.
+- **ESCALATE [#27](https://github.com/MemPalace/mempalace/issues/27)** — <reason>
 
 ## Revised Severity
 
 | # | Title | Heuristic | Revised | Rationale | In-flight |
 |---|---|---|---|---|---|
-| ... |
+| [#NNN](https://github.com/MemPalace/mempalace/issues/NNN) | ... |
 
 ## Issue Clusters
 
 ### Cluster: <short name>
-- Canonical: #<N> — <why>
-- Dupes: #<A>, #<B>, #<C>
+- Canonical: [#N](https://github.com/MemPalace/mempalace/issues/N) — <why>
+- Dupes: [#A](...), [#B](...), [#C](...)
 - Scope: <one line>
 - Action: <close dupes / file tracking issue / etc>
 
@@ -146,17 +154,17 @@ Structure:
 ## PR Triage
 
 ### BENIGN (N)
-- #<N> `branch` — <why the flags are false positives>
+- [#N](https://github.com/MemPalace/mempalace/issues/N) `branch` — <why the flags are false positives>
 
 ### REVIEW-NEEDED (N)
-- #<N> `branch` — <real concerns>
+- [#N](...) `branch` — <real concerns>
 
 ### SUSPICIOUS (N)
-- #<N> `branch` — <what's wrong>
+- [#N](...) `branch` — <what's wrong>
 
 ## Top 10 Next Actions
 
-1. **<action>** — Resolves #A, #B. Reason: <one line>. Effort: trivial.
+1. **<action>** — Resolves [#A](...), [#B](...). Reason: <one line>. Effort: trivial.
 2. ...
 ```
 
