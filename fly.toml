@@ -1,0 +1,55 @@
+# fly.toml — MemPalace Triage on Fly.io
+#
+# Single-machine deploy: one Bun process serves the Elysia API, the WebSocket,
+# the 15-min triage poller, and the built Angular dashboard — all on :7800.
+# SQLite lives on a mounted volume so data survives restarts/deploys.
+#
+# Before first deploy:
+#   fly apps create mempalace-triage
+#   fly secrets set GITHUB_TOKEN=ghp_xxx   # read-only PAT scoped to public_repo
+#   fly volumes create triage_data --size 1 --region iad
+#   fly deploy
+
+app = "mempalace-triage"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "7800"
+  POLLER_ENABLED = "true"
+  POLL_INTERVAL_MS = "900000"          # 15 min
+  DATABASE_URL = "/data/triage.db"
+  DASHBOARD_DIST = "/app/dashboard-dist"
+  MAINTAINERS_CONFIG = "/app/config/maintainers.toml"
+
+[[mounts]]
+  source = "triage_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 7800
+  force_https = true
+  auto_stop_machines = "off"           # keep poller + WS alive
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 200
+    soft_limit = 100
+
+# Liveness — Elysia responds on /healthz
+[[http_service.checks]]
+  grace_period = "15s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/healthz"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512

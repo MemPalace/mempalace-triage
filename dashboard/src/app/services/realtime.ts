@@ -62,7 +62,15 @@ export class Realtime {
   private resolveUrl(): string {
     if (typeof window === 'undefined') return '';
     const w = window as unknown as { __WS_URL__?: string };
-    return w.__WS_URL__ ?? 'ws://localhost:7800/ws';
+    if (w.__WS_URL__) return w.__WS_URL__;
+    // Angular's ng serve runs on :4200 and can't easily proxy WS — in dev
+    // we hit the Bun server directly on :7800.
+    if (window.location.port === '4200') {
+      return 'ws://localhost:7800/ws';
+    }
+    // Prod: WS is same-origin (bun serves both the dashboard and /ws).
+    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${proto}//${window.location.host}/ws`;
   }
 
   private connect() {

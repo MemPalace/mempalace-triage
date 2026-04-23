@@ -32,18 +32,39 @@ if (pollerEnabled) {
 // ─── Elysia app ──────────────────────────────────────────────────────────────
 
 const PORT = Number(process.env.PORT ?? 7800);
+const DASHBOARD_DIST = process.env.DASHBOARD_DIST;
 
 const app = new Elysia()
   .use(cors({ origin: true, credentials: true }))
-  .get("/", () => ({
+  .get("/healthz", () => ({ ok: true, ts: Date.now() }))
+  .use(publicApi)
+  .use(wsApi);
+
+if (DASHBOARD_DIST) {
+  // Prod single-origin deploy: bun serves the built Angular dashboard from
+  // the same port as the API + WebSocket. For each GET we try the file on
+  // disk first; if missing, fall back to index.html so Angular's router
+  // handles the client-side route. We avoid @elysiajs/static here because it
+  // requires process.getBuiltinModule, which current Bun doesn't expose.
+  const INDEX = `${DASHBOARD_DIST}/index.html`;
+  app.get("/*", async ({ request }) => {
+    const pathname = new URL(request.url).pathname;
+    if (pathname !== "/") {
+      const file = Bun.file(`${DASHBOARD_DIST}${pathname}`);
+      if (await file.exists()) return file;
+    }
+    return Bun.file(INDEX);
+  });
+  console.log(`[boot] serving dashboard from ${DASHBOARD_DIST}`);
+} else {
+  app.get("/", () => ({
     service: "mempalace-triage-server",
     version: "0.1.0",
     docs: "/api",
-  }))
-  .get("/healthz", () => ({ ok: true, ts: Date.now() }))
-  .use(publicApi)
-  .use(wsApi)
-  .listen(PORT);
+  }));
+}
+
+app.listen(PORT);
 
 console.log(`[boot] listening on http://localhost:${PORT}`);
 

@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Node / Bun
+**/node_modules
+**/.angular
+**/dist
+
+# Runtime state that must not leak into the image
+**/.cache
+**/logs
+**/triage.db
+**/triage.db-*
+*.sqlite
+*.sqlite-journal
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+*.log
+
+# Docs and local scratch
+sample-runs
+pr-review-dashboard.html
+**/*.md
+
+# Claude / agent scaffolding
+.claude
+
+# Fly itself
+fly.toml
+Dockerfile
+.dockerignore
