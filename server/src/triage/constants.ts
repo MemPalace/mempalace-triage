@@ -42,6 +42,15 @@ export const CRITICAL_KEYWORDS: string[] = [
   // catastrophic semantics
   "\\bsingle point of failure\\b", "\\bSPOF\\b",
   "\\bpalace data gone\\b", "\\bbreaks existing\\b",
+  // release / packaging defects — added after #1093 slipped through classified
+  // as "normal". These catch install-time regressions the runtime-symptom
+  // vocabulary above misses.
+  "\\brelease defect\\b", "\\bbroken install\\b",
+  "\\bfresh install\\b.*\\bfail",
+  "\\bentry point\\b.*\\bmissing\\b",
+  "\\bpip install\\b.*\\bfail",
+  "\\bcommand not found\\b", "\\bexecutable file not found\\b",
+  "\\bv\\d+\\.\\d+\\.\\d+\\b.*\\brelease defect\\b",
 ];
 
 export const HIGH_KEYWORDS: string[] = [
@@ -51,6 +60,12 @@ export const HIGH_KEYWORDS: string[] = [
   "\\bsurrogate error\\b", "\\bencoding (crash|error|failure)\\b",
   "\\bstale (cache|index|results)\\b",
   "\\bre-process\\w* every\\b",
+  // Packaging / plugin manifest drift — flags issues that touch the release
+  // surface (plugin.json, pyproject.toml) before they escalate to broken
+  // installs. Paired with the CRITICAL additions so near-misses still surface.
+  "\\bplugin\\.json\\b", "\\bpyproject\\.toml\\b",
+  "\\bconsole script\\b", "\\bentry point\\b",
+  "\\bpipx\\b", "\\buv compat\\w*\\b",
 ];
 
 // RegExp objects (not strings) because one pattern needs the `u` flag to
