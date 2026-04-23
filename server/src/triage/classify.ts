@@ -4,6 +4,7 @@ import {
   DEWEIGHT_PHRASES,
   FEATURE_TITLE_PREFIX,
   HIGH_KEYWORDS,
+  META_REPORT_TITLE_PATTERNS,
   NOISE_BODY_PATTERNS,
   NOISE_TITLE_PATTERNS,
   SUBSTANTIVE_TITLE_MARKERS,
@@ -15,6 +16,12 @@ function matchAny(patterns: string[], text: string): boolean {
     if (new RegExp(pat, "i").test(text)) return true;
   }
   return false;
+}
+
+function demoteOnce(sev: Severity): Severity {
+  if (sev === "critical") return "high";
+  if (sev === "high") return "normal";
+  return sev;
 }
 
 export function classifySeverity(issue: Issue): Severity {
@@ -33,16 +40,28 @@ export function classifySeverity(issue: Issue): Severity {
   const isBugSignaled =
     issue.labels.includes("bug") || BUG_TITLE_PREFIX.test(issue.title);
 
+  let severity: Severity = "normal";
+
   // Title alone is the strongest signal → always promotes to CRITICAL.
-  if (matchAny(CRITICAL_KEYWORDS, titleLower)) return "critical";
-
+  if (matchAny(CRITICAL_KEYWORDS, titleLower)) severity = "critical";
   // Body keyword only promotes if there's a bug signal elsewhere.
-  if (isBugSignaled && matchAny(CRITICAL_KEYWORDS, bodyLower)) return "critical";
+  else if (isBugSignaled && matchAny(CRITICAL_KEYWORDS, bodyLower))
+    severity = "critical";
+  else if (matchAny(HIGH_KEYWORDS, titleLower)) severity = "high";
+  else if (isBugSignaled && matchAny(HIGH_KEYWORDS, bodyLower))
+    severity = "high";
 
-  if (matchAny(HIGH_KEYWORDS, titleLower)) return "high";
-  if (isBugSignaled && matchAny(HIGH_KEYWORDS, bodyLower)) return "high";
+  // Meta-reports ("Security Audit: 8 vulnerabilities", "7 issues in vN") bundle
+  // multiple bugs into one filing. Real signal inside, but not mergeable until
+  // split — demote one tier so the queue stays actionable.
+  for (const pat of META_REPORT_TITLE_PATTERNS) {
+    if (pat.test(issue.title)) {
+      severity = demoteOnce(severity);
+      break;
+    }
+  }
 
-  return "normal";
+  return severity;
 }
 
 export function detectNoise(issue: Issue): { isNoise: boolean; reason: string } {

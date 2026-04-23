@@ -82,6 +82,27 @@ export const NOISE_TITLE_PATTERNS: RegExp[] = [
   // Only punctuation / emoji. `\p{L}\p{N}_` = any Unicode letter/number + `_`
   // (Python's default `\w`). Requires the `u` flag.
   /^[^\p{L}\p{N}_]+$/iu,
+  // Hysterical / fear-post titles — real users, real distress, no actionable
+  // content. "!! X !!" wrapping, or ALL-CAPS fear verbs with no specifics
+  // (no file, no version, no reproducer). Added after #1079 ("!! MY MAC HAS
+  // BEEN COMPROMISED !!") slipped through as CRITICAL via its body keywords.
+  /^\s*!!.*!!\s*$/,
+  /\b(COMPROMISED|HACKED|HIJACKED|POSSESSED|STOLEN)\b/,
+];
+
+// Meta-reports bundle multiple bugs into one issue ("Security Audit: 8
+// unreported vulnerabilities," "bug: 7 issues in v3.0.0→v3.3.0"). They
+// often trip keyword heuristics because each bullet inside describes a real
+// problem — but the issue as a whole is not actionable without a split.
+// These titles demote the severity by one tier (critical → high, high →
+// normal) so the queue reflects what's actually mergeable, not the union
+// of every bug anyone ever typed into one report.
+export const META_REPORT_TITLE_PATTERNS: RegExp[] = [
+  // "N issues / bugs / bug fixes / vulnerabilities / problems / defects"
+  /\b\d+\s+(issues?|bugs?(\s*fixes?)?|vulnerabilit|problems?|defects?|reports?)\b/i,
+  /^\s*(security audit|bug report|code review|audit|review)\s*[:\-—]/i,
+  /\bunreported (vulnerabilit|bugs|issues)\b/i,
+  /\b(Executive Summary|Findings|Scope)\b.*\b(vulnerabilit|issues|bugs)\b/i,
 ];
 
 export const NOISE_BODY_PATTERNS: RegExp[] = [

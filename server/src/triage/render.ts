@@ -70,8 +70,13 @@ export function renderMarkdown(
   const recentClosed = closedIssues.filter((i) => (i.closed_at ?? "") >= cutoff);
   const recentMerged = mergedPrs.filter((p) => (p.merged_at ?? "") >= cutoff);
 
-  const critical = openIssues.filter((i) => i.severity === "critical");
-  const high = openIssues.filter((i) => i.severity === "high");
+  // Noise items are triaged in their own section; exclude them from CRITICAL
+  // and HIGH so the actionable queues aren't polluted by fear-posts or spam
+  // that happen to ship keyword collisions in their bodies.
+  const critical = openIssues.filter(
+    (i) => i.severity === "critical" && !i.is_noise,
+  );
+  const high = openIssues.filter((i) => i.severity === "high" && !i.is_noise);
   const bugsLabeled = openIssues.filter((i) => i.labels.includes("bug"));
   const bugsUnlabeledDefects = openIssues.filter(
     (i) =>
