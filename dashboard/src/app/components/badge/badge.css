@@ -1,0 +1,61 @@
+:host {
+  display: inline-flex;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  padding: 3px 8px 3px;
+  border-radius: 4px;
+  line-height: 1.3;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.tone-neutral {
+  background: rgba(139, 153, 176, 0.08);
+  color: var(--color-muted);
+  border-color: rgba(139, 153, 176, 0.18);
+}
+
+.tone-red {
+  background: rgba(255, 139, 139, 0.1);
+  color: var(--color-hot);
+  border-color: rgba(255, 139, 139, 0.3);
+}
+
+.tone-orange,
+.tone-yellow {
+  background: rgba(251, 191, 36, 0.09);
+  color: var(--color-amber);
+  border-color: rgba(251, 191, 36, 0.28);
+}
+
+.tone-green {
+  background: rgba(52, 211, 153, 0.09);
+  color: var(--color-emerald);
+  border-color: rgba(52, 211, 153, 0.28);
+}
+
+.tone-blue {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--color-cyan-vivid);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.tone-cyan {
+  background: rgba(125, 211, 252, 0.1);
+  color: var(--color-cyan);
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+.tone-purple {
+  background: rgba(167, 139, 250, 0.09);
+  color: var(--color-violet);
+  border-color: rgba(167, 139, 250, 0.28);
+}

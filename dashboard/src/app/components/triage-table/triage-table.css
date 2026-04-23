@@ -1,0 +1,96 @@
+:host { display: block; }
+
+.triage-table-wrap {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.triage-table-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.triage-table {
+  width: 100%;
+  position: relative;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.triage-table thead tr {
+  background: rgba(24, 32, 51, 0.4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.triage-table th {
+  text-align: left;
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  white-space: nowrap;
+}
+
+.triage-table td {
+  padding: 16px 16px;
+  vertical-align: top;
+}
+
+.triage-table tbody tr {
+  border-bottom: 1px solid rgba(28, 38, 64, 0.55);
+  transition: background 180ms ease;
+}
+
+.triage-table tbody tr:last-child { border-bottom: none; }
+
+.triage-table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.025);
+}
+
+.col-num { width: 96px; }
+.col-author { width: 180px; }
+.col-flags { width: 220px; }
+.col-claim { width: 200px; white-space: nowrap; }
+
+.item-number {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-cyan-vivid);
+  letter-spacing: 0.2px;
+  transition: color 180ms ease;
+}
+.item-number:hover { color: var(--color-cyan); }
+
+.item-title {
+  color: var(--color-ice);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+  font-family: var(--font-sans);
+}
+
+.item-modules {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 6px;
+  letter-spacing: 0.2px;
+}
+
+.item-author {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-body);
+  letter-spacing: 0.2px;
+}

@@ -1,29 +1,40 @@
-<div class="flex items-baseline justify-between flex-wrap gap-6">
-  <div>
-    <h1 class="text-4xl font-bold tracking-tight">
-      MemPalace <span class="text-accent-blue">Triage</span>
+<section class="hero">
+  <div class="hero-bloom" aria-hidden="true"></div>
+  <div class="relative">
+    <div class="eyebrow-cyan mb-4">01 · Backlog</div>
+    <h1 class="display-tight text-[clamp(44px,6vw,72px)] leading-[0.95] mb-5">
+      Triage<span class="text-cyan-vivid">.</span>
     </h1>
-    <p class="text-sm text-fg-muted mt-2 flex items-center gap-2 flex-wrap">
-      <span class="font-mono">MemPalace/mempalace</span>
-      <span class="text-fg-muted/60">·</span>
-      <span class="inline-flex items-center gap-2">
+    <p class="text-body max-w-xl text-[15px] leading-relaxed">
+      Heuristic classifier over
+      <a
+        href="https://github.com/MemPalace/mempalace"
+        target="_blank"
+        rel="noopener"
+        class="text-cyan-vivid hover:text-cyan transition-colors font-mono text-[14px]"
+        >MemPalace/mempalace</a
+      >. Severity, suspicion, and priority — polled every 15&nbsp;min, streamed live over WebSocket.
+    </p>
+
+    <div class="mt-7 flex items-center gap-6 flex-wrap">
+      <span class="inline-flex items-center gap-2.5">
         <span
-          class="inline-block w-2.5 h-2.5 rounded-full"
+          class="relative inline-block w-2 h-2 rounded-full"
           [class]="dotClass()"
           aria-hidden="true"
         ></span>
-        <span class="uppercase tracking-wider text-[11px]">
-          {{ connectionState() }}
+        <span class="eyebrow">
+          {{ connectionLabel() }}
         </span>
       </span>
-    </p>
+
+      @if (lastUpdated(); as ts) {
+        <span class="eyebrow text-dim">
+          Updated · <span class="text-body tabular-nums">{{ ts | date: 'HH:mm:ss' }}</span>
+        </span>
+      } @else {
+        <span class="eyebrow text-dim">Awaiting snapshot</span>
+      }
+    </div>
   </div>
-  <div class="text-right text-xs text-fg-muted space-y-1">
-    <div>Public read-only dashboard</div>
-    @if (lastUpdated(); as ts) {
-      <div>
-        Last update: <span class="tabular-nums">{{ ts | date: 'HH:mm:ss' }}</span>
-      </div>
-    }
-  </div>
-</div>
+</section>

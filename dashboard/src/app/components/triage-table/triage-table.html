@@ -1,79 +1,59 @@
 @if (items().length > 0) {
-  <div class="rounded-lg border border-border bg-surface overflow-hidden">
-    <table class="w-full text-sm">
+  <div class="triage-table-wrap">
+    <table class="triage-table">
       <thead>
-        <tr class="bg-white/[0.02] border-b border-border">
-          <th
-            class="text-left px-4 py-3 text-[11px] uppercase tracking-wider text-fg-muted w-24"
-          >
-            #
-          </th>
-          <th class="text-left px-4 py-3 text-[11px] uppercase tracking-wider text-fg-muted">
-            Title
-          </th>
-          <th
-            class="text-left px-4 py-3 text-[11px] uppercase tracking-wider text-fg-muted w-48"
-          >
-            Author
-          </th>
-          <th
-            class="text-left px-4 py-3 text-[11px] uppercase tracking-wider text-fg-muted w-48"
-          >
-            Flags
-          </th>
-          <th
-            class="text-left px-4 py-3 text-[11px] uppercase tracking-wider text-fg-muted w-48"
-          >
-            Claimed by
-          </th>
+        <tr>
+          <th class="col-num">#</th>
+          <th>Title</th>
+          <th class="col-author">Author</th>
+          <th class="col-flags">Flags</th>
+          <th class="col-claim">Claimed by</th>
         </tr>
       </thead>
       <tbody>
         @for (item of items(); track item.number) {
           @let modulesPreview =
-            item.modules.slice(0, 3).join(', ') + (item.modules.length > 3 ? ' +' + (item.modules.length - 3) : '');
-          <tr class="border-b border-border/60 last:border-b-0 hover:bg-white/[0.03] transition-colors">
-            <td class="align-top px-4 py-3 whitespace-nowrap">
+            item.modules.slice(0, 3).join(' · ') + (item.modules.length > 3 ? ' +' + (item.modules.length - 3) : '');
+          <tr>
+            <td class="align-top col-num">
               <a
                 [href]="githubUrl(item)"
                 target="_blank"
                 rel="noopener"
-                class="font-semibold text-accent-blue hover:underline tabular-nums"
+                class="item-number"
                 >#{{ item.number }}</a
               >
-              <div class="mt-0.5 text-[10px] uppercase tracking-wider text-fg-muted">
-                {{ item.kind === 'pr' ? 'PR' : 'issue' }}
+              <div class="eyebrow mt-1">
+                {{ item.kind === 'pr' ? 'PR' : 'Issue' }}
               </div>
             </td>
-            <td class="align-top px-4 py-3">
-              <div class="text-fg leading-snug">{{ item.title }}</div>
+            <td class="align-top">
+              <div class="item-title">{{ item.title }}</div>
               @if (item.modules.length > 0) {
-                <div class="text-[11px] font-mono text-fg-muted mt-1">
-                  {{ modulesPreview }}
-                </div>
+                <div class="item-modules">{{ modulesPreview }}</div>
               }
             </td>
-            <td class="align-top px-4 py-3 whitespace-nowrap text-sm text-fg-muted">
-              <div>&#64;{{ item.author }}</div>
+            <td class="align-top col-author">
+              <div class="item-author">&#64;{{ item.author }}</div>
               @switch (item.authorRole) {
                 @case ('owner') {
-                  <div class="mt-1"><app-badge label="OWNER" tone="blue" /></div>
+                  <div class="mt-1.5"><app-badge label="OWNER" tone="blue" /></div>
                 }
                 @case ('maintainer') {
-                  <div class="mt-1"><app-badge label="MAINTAINER" tone="cyan" /></div>
+                  <div class="mt-1.5"><app-badge label="MAINTAINER" tone="cyan" /></div>
                 }
                 @case ('agent') {
-                  <div class="mt-1"><app-badge label="BOT" tone="purple" /></div>
+                  <div class="mt-1.5"><app-badge label="BOT" tone="purple" /></div>
                 }
                 @default {
                   @if (item.firstTimeAuthor) {
-                    <div class="mt-1"><app-badge label="first-time" tone="yellow" /></div>
+                    <div class="mt-1.5"><app-badge label="first-time" tone="yellow" /></div>
                   }
                 }
               }
             </td>
-            <td class="align-top px-4 py-3">
-              <div class="flex flex-wrap gap-1">
+            <td class="align-top col-flags">
+              <div class="flex flex-wrap gap-1.5">
                 @if (item.severityHeuristic === 'critical') {
                   <app-badge label="CRITICAL" tone="red" />
                 } @else if (item.severityHeuristic === 'high') {
@@ -95,14 +75,14 @@
                 }
               </div>
             </td>
-            <td class="align-top px-4 py-3 whitespace-nowrap">
+            <td class="align-top col-claim">
               @if (item.claim; as claim) {
                 <app-badge
                   [label]="'@' + claim.maintainerLogin + ' · ' + claim.intent"
                   tone="cyan"
                 />
               } @else {
-                <span class="text-fg-muted text-xs">—</span>
+                <span class="text-dim text-xs">—</span>
               }
             </td>
           </tr>
@@ -111,7 +91,7 @@
     </table>
   </div>
 } @else {
-  <div class="rounded-lg border border-border bg-surface px-6 py-5 text-fg-muted text-sm">
+  <div class="card-atmos px-6 py-5 text-muted text-sm">
     {{ emptyMessage() }}
   </div>
 }
