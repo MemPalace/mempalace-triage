@@ -8,9 +8,9 @@ module.exports = {
     {
       name: 'mempalace-server-dev',
       cwd: path.join(root, 'server'),
-      script: 'src/index.ts',
-      interpreter: 'bun',
-      interpreter_args: '--watch',
+      script: 'bun',
+      args: '--watch src/index.ts',
+      interpreter: 'none',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,

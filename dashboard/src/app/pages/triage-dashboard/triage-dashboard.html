@@ -1,76 +1,113 @@
-<main class="max-w-[1400px] mx-auto px-8 py-10">
+<main class="max-w-[1240px] mx-auto px-8">
   <app-dashboard-header
     [connectionState]="rt.state()"
     [lastUpdated]="rt.lastUpdated()"
   />
 
-  <section class="mt-10">
+  <!-- ── 02 · Snapshot ─────────────────────────────────────────── -->
+  <section class="dash-section">
+    <div class="section-head">
+      <div class="eyebrow-cyan">02 · Snapshot</div>
+      <h2 class="display-tight text-[clamp(24px,3vw,32px)] mt-2">
+        The backlog at a glance.
+      </h2>
+      <p class="section-intro">
+        Point-in-time counts from the last poll. Numbers stream in live — no need to refresh.
+      </p>
+    </div>
     <app-stats-grid [stats]="rt.stats()" />
   </section>
 
-  <!-- Heuristic alerts -->
-  <section class="mt-12">
-    <header class="flex items-center gap-3 mb-4">
-      <h2 class="text-xl font-semibold">Heuristic alerts</h2>
-      <span class="text-xs text-fg-muted">open only</span>
-      <div class="flex items-center gap-2 ml-auto">
-        <app-badge
-          [label]="criticalItems().length + ' critical'"
-          tone="red"
-        />
-        <app-badge [label]="highItems().length + ' high'" tone="orange" />
+  <!-- ── 03 · Heuristic alerts ─────────────────────────────────── -->
+  <section class="dash-section">
+    <div class="section-head">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div class="eyebrow-cyan">03 · Heuristic alerts</div>
+          <h2 class="display-tight text-[clamp(24px,3vw,32px)] mt-2">
+            What the classifier wants your eyes on.
+          </h2>
+          <p class="section-intro">
+            Severity assigned by the keyword heuristics in
+            <code class="text-cyan">server/src/triage/constants.ts</code>.
+            Open issues and PRs only.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <app-badge
+            [label]="criticalItems().length + ' critical'"
+            tone="red"
+          />
+          <app-badge [label]="highItems().length + ' high'" tone="orange" />
+        </div>
       </div>
-    </header>
+    </div>
     <app-triage-table
       [items]="alertItems()"
-      [emptyMessage]="items().length === 0 ? 'Waiting for snapshot…' : 'No heuristic-critical or high open items.'"
+      [emptyMessage]="items().length === 0 ? 'Awaiting snapshot…' : 'No heuristic-critical or high open items. The palace is quiet.'"
     />
   </section>
 
-  <!-- Suspicious PRs — grouped by tier -->
-  <section class="mt-12">
-    <header class="flex items-center gap-3 mb-4 flex-wrap">
-      <h2 class="text-xl font-semibold">Suspicious open PRs</h2>
-      <span class="text-xs text-fg-muted"
-        >sorted by risk tier · highest first</span
-      >
-      @let counts = suspicionCounts();
-      <div class="flex items-center gap-1.5 ml-auto flex-wrap">
-        @if (counts.critical > 0) {
-          <app-badge [label]="counts.critical + ' exec risk'" tone="red" />
-        }
-        @if (counts.high > 0) {
-          <app-badge [label]="counts.high + ' trust boundary'" tone="orange" />
-        }
-        @if (counts.medium > 0) {
-          <app-badge [label]="counts.medium + ' supply-chain'" tone="purple" />
-        }
-        @if (counts.low > 0) {
-          <app-badge [label]="counts.low + ' large diff'" tone="yellow" />
-        }
+  <!-- ── 04 · Suspicious PRs ───────────────────────────────────── -->
+  <section class="dash-section">
+    <div class="section-head">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div class="eyebrow-cyan">04 · Suspicious PRs</div>
+          <h2 class="display-tight text-[clamp(24px,3vw,32px)] mt-2">
+            Open PRs flagged by the suspicion tiers.
+          </h2>
+          <p class="section-intro">
+            Sorted by risk tier, highest first. Exec risk &gt; trust boundary &gt; supply-chain &gt; large diff.
+          </p>
+        </div>
+        @let counts = suspicionCounts();
+        <div class="flex items-center gap-1.5 flex-wrap">
+          @if (counts.critical > 0) {
+            <app-badge [label]="counts.critical + ' exec risk'" tone="red" />
+          }
+          @if (counts.high > 0) {
+            <app-badge [label]="counts.high + ' trust boundary'" tone="orange" />
+          }
+          @if (counts.medium > 0) {
+            <app-badge [label]="counts.medium + ' supply-chain'" tone="purple" />
+          }
+          @if (counts.low > 0) {
+            <app-badge [label]="counts.low + ' large diff'" tone="yellow" />
+          }
+        </div>
       </div>
-    </header>
-    <app-triage-table [items]="suspiciousPrs()" emptyMessage="None flagged." />
+    </div>
+    <app-triage-table [items]="suspiciousPrs()" emptyMessage="None flagged. Review any fresh PRs before shipping." />
   </section>
 
-  <!-- Priority queues -->
-  <section class="mt-12">
-    <header class="flex items-center gap-3 mb-4">
-      <h2 class="text-xl font-semibold">Priority queues</h2>
-      <span class="text-xs text-fg-muted"
-        >(priorities set via MCP in M2 — currently unused)</span
-      >
-    </header>
+  <!-- ── 05 · Priority queues ──────────────────────────────────── -->
+  <section class="dash-section">
+    <div class="section-head">
+      <div class="eyebrow-cyan">05 · Priority queues</div>
+      <h2 class="display-tight text-[clamp(24px,3vw,32px)] mt-2">
+        Maintainer-set priorities.
+      </h2>
+      <p class="section-intro">
+        P0 / P1 / P2 assigned via MCP in the M2 milestone — currently empty, populates
+        once the claim + priority tools ship.
+      </p>
+    </div>
     <app-priority-queues [items]="items()" />
   </section>
 
-  <footer
-    class="mt-16 pt-6 border-t border-border text-xs text-fg-muted flex justify-between"
-  >
-    <span>MemPalace Triage Server · v0.1.0 · M1 (read-only)</span>
-    <span>
-      {{ items().length }} items indexed ·
-      {{ rt.state() === 'open' ? 'streaming live' : 'reconnecting…' }}
+  <footer class="dash-footer">
+    <div class="flex items-center gap-3">
+      <svg viewBox="0 0 200 200" width="16" height="16" aria-hidden="true">
+        <polygon points="40,160 40,50 80,110" fill="#7DD3FC" fill-opacity="0.3" stroke="#7DD3FC" stroke-width="10" stroke-linejoin="round"/>
+        <polygon points="80,110 100,150 120,110" fill="#7DD3FC" fill-opacity="0.5" stroke="#7DD3FC" stroke-width="10" stroke-linejoin="round"/>
+        <polygon points="160,160 160,50 120,110" fill="#7DD3FC" fill-opacity="0.3" stroke="#7DD3FC" stroke-width="10" stroke-linejoin="round"/>
+      </svg>
+      <span class="eyebrow">MemPalace Triage · v0.1.0 · M1</span>
+    </div>
+    <span class="eyebrow">
+      <span class="text-body tabular-nums">{{ items().length }}</span> items indexed ·
+      {{ rt.state() === 'open' ? 'Streaming live' : 'Reconnecting…' }}
     </span>
   </footer>
 </main>

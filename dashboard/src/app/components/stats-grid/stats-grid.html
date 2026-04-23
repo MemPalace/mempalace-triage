@@ -1,51 +1,61 @@
 @if (stats(); as s) {
-  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-    <app-stat-card [value]="s.openPrs" label="Open PRs" tone="blue" />
-    <app-stat-card [value]="s.openIssues" label="Open issues" tone="yellow" />
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+    <app-stat-card [value]="s.openPrs" label="Open PRs" tone="blue" [index]="0" />
+    <app-stat-card [value]="s.openIssues" label="Open issues" tone="yellow" [index]="1" />
     <app-stat-card
       [value]="s.heuristicCritical"
       label="Critical"
       subtitle="heuristic severity"
       tone="red"
+      [index]="2"
     />
     <app-stat-card
       [value]="s.heuristicHigh"
       label="High"
       subtitle="heuristic severity"
       tone="orange"
+      [index]="3"
     />
-    <app-stat-card [value]="s.activeClaims" label="Active claims" tone="cyan" />
-    <app-stat-card [value]="s.inProgress" label="In progress" tone="green" />
+    <app-stat-card [value]="s.activeClaims" label="Active claims" tone="cyan" [index]="4" />
+    <app-stat-card [value]="s.inProgress" label="In progress" tone="green" [index]="5" />
   </div>
 
-  <!-- Dedicated suspicion breakdown row: one card per tier so the granularity
-       is legible at a glance, not buried in a single "47 flagged" number. -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-    <app-stat-card
-      [value]="s.suspicionCritical"
-      label="Exec risk"
-      subtitle="eval / shell / curl|bash in diff"
-      tone="red"
-    />
-    <app-stat-card
-      [value]="s.suspicionHigh"
-      label="Trust boundary"
-      subtitle="hook scripts · CI workflows"
-      tone="orange"
-    />
-    <app-stat-card
-      [value]="s.suspicionMedium"
-      label="Supply-chain"
-      subtitle="deps · lockfile · LICENSE"
-      tone="purple"
-    />
-    <app-stat-card
-      [value]="s.suspicionLow"
-      label="Large diff"
-      subtitle="+2000 lines or more"
-      tone="yellow"
-    />
+  <!-- Suspicion tier breakdown -->
+  <div class="mt-8">
+    <div class="eyebrow mb-3">Suspicion tiers · open PRs</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <app-stat-card
+        [value]="s.suspicionCritical"
+        label="Exec risk"
+        subtitle="eval / shell / curl|bash in diff"
+        tone="red"
+        [index]="0"
+      />
+      <app-stat-card
+        [value]="s.suspicionHigh"
+        label="Trust boundary"
+        subtitle="hook scripts · CI workflows"
+        tone="orange"
+        [index]="1"
+      />
+      <app-stat-card
+        [value]="s.suspicionMedium"
+        label="Supply-chain"
+        subtitle="deps · lockfile · LICENSE"
+        tone="purple"
+        [index]="2"
+      />
+      <app-stat-card
+        [value]="s.suspicionLow"
+        label="Large diff"
+        subtitle="+2000 lines or more"
+        tone="yellow"
+        [index]="3"
+      />
+    </div>
   </div>
 } @else {
-  <div class="text-fg-muted text-sm">Waiting for snapshot…</div>
+  <div class="card-atmos px-6 py-5 text-muted text-sm">
+    <span class="eyebrow">Awaiting snapshot</span>
+  </div>
 }

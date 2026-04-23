@@ -1,39 +1,140 @@
 @import 'tailwindcss';
 
 /*
- * GitHub-dark palette ported from pr-review-dashboard.html.
- * In Tailwind v4, colors declared inside @theme become utility classes
- * automatically (e.g. bg-bg, text-accent-red, border-border, bg-accent-blue/10).
+ * MemPalace brand palette — "Crystalline Observatory"
+ *
+ * In Tailwind v4, colors declared inside @theme are lifted into utility
+ * classes automatically. We define the canonical brand tokens first, then
+ * alias the legacy accent-* names so existing components keep compiling
+ * while the whole dashboard re-skins.
  */
 @theme {
-  --color-bg: #0d1117;
-  --color-surface: #161b22;
-  --color-surface-2: #1c222b;
-  --color-border: #30363d;
-  --color-border-strong: #3d444d;
+  /* ── Atmosphere / surfaces ──────────────────────────────────────── */
+  --color-bg: #080C18;              /* Void — primary background */
+  --color-surface: #0F1524;         /* Card — default elevated surface */
+  --color-surface-high: #182033;    /* Modal / highest elevation */
+  --color-border: #1C2640;          /* Card outlines, dividers */
+  --color-border-soft: #121829;     /* Subtle rules */
 
-  --color-fg: #e6edf3;
-  --color-fg-muted: #8b949e;
+  /* ── Text ───────────────────────────────────────────────────────── */
+  --color-ice: #DBE7F5;             /* Hero text, titles */
+  --color-body: #CDD5E0;            /* Running copy */
+  --color-muted: #8B99B0;           /* Secondary copy, captions */
+  --color-dim: #5B6B82;             /* Meta, timestamps, disabled */
 
-  --color-accent-green: #3fb950;
-  --color-accent-yellow: #d29922;
-  --color-accent-red: #f85149;
-  --color-accent-blue: #58a6ff;
-  --color-accent-purple: #bc8cff;
-  --color-accent-orange: #f0883e;
-  --color-accent-cyan: #39d2c0;
+  /* ── Crystal cyan (primary) ─────────────────────────────────────── */
+  --color-cyan: #7DD3FC;            /* Default cyan on dark */
+  --color-cyan-vivid: #38BDF8;      /* CTAs, focus, active */
 
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* ── Wing accents ───────────────────────────────────────────────── */
+  --color-rose: #FF88CB;
+  --color-emerald: #34D399;
+  --color-amber: #FBBF24;
+  --color-violet: #A78BFA;
+  --color-indigo: #818CF8;
+  --color-hot: #FF8B8B;             /* Critical / red-equivalent */
+
+  /* ── Legacy accent-* aliases so existing components keep working ─ */
+  --color-accent-red: var(--color-hot);
+  --color-accent-orange: var(--color-amber);
+  --color-accent-yellow: var(--color-amber);
+  --color-accent-green: var(--color-emerald);
+  --color-accent-blue: var(--color-cyan-vivid);
+  --color-accent-cyan: var(--color-cyan);
+  --color-accent-purple: var(--color-violet);
+
+  /* ── Legacy fg / surface aliases ────────────────────────────────── */
+  --color-fg: var(--color-body);
+  --color-fg-muted: var(--color-muted);
+  --color-surface-2: var(--color-surface-high);
+  --color-border-strong: #2A3552;
+
+  /* ── Type ───────────────────────────────────────────────────────── */
+  --font-display: 'Neue Machina', 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @layer base {
-  html,
-  body {
+  html, body {
     background: var(--color-bg);
-    color: var(--color-fg);
+    color: var(--color-body);
     font-family: var(--font-sans);
-    line-height: 1.5;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Subtle atmospheric grain so the void doesn't feel flat on OLED */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% -10%, rgba(56, 189, 248, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 85% 10%, rgba(167, 139, 250, 0.04) 0%, transparent 60%);
+  }
+
+  /* Keep Angular's root above the atmospheric wash */
+  app-root { position: relative; z-index: 1; display: block; }
+
+  ::selection { background: rgba(56, 189, 248, 0.25); color: var(--color-ice); }
+
+  /* Scrollbar — subtle, brand-matched */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb { background: #1C2640; border-radius: 8px; border: 2px solid var(--color-bg); }
+  ::-webkit-scrollbar-thumb:hover { background: #2A3552; }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+ * Custom utilities used across components.
+ * Tailwind v4 @utility: each generates a stable class.
+ * ─────────────────────────────────────────────────────────────── */
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-dim);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@utility eyebrow-cyan {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-cyan-vivid);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@utility display-tight {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--color-ice);
+}
+
+/* Atmospheric card — subtle radial glow in top-right corner */
+@utility card-atmos {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Animations — one orchestrated page-load reveal */
+@keyframes mp-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mp-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(0.88); }
 }

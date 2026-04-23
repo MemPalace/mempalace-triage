@@ -1,9 +1,68 @@
 :host {
+  position: relative;
   display: flex;
-}
-
-:host.card {
-  border-radius: 0.5rem;
+  flex-direction: column;
+  min-height: 132px;
+  padding: 22px 22px 20px;
+  border-radius: 14px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
+  overflow: hidden;
+  transition: border-color 240ms ease, transform 240ms ease, background 240ms ease;
+  animation: mp-fade-up 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+:host:hover {
+  border-color: #2A3552;
+  background: #101828;
+}
+
+/* Radial corner glow — tone-tinted via child bg var on hover */
+.stat-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(56, 189, 248, 0.08) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -1.2px;
+  line-height: 1;
+  color: var(--color-ice);
+}
+
+/* Tone variants tint both the numeral color and the corner glow */
+:host[data-tone='red'] .stat-value { color: var(--color-hot); }
+:host[data-tone='red'] .stat-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(255, 139, 139, 0.11) 0%, transparent 60%);
+}
+
+:host[data-tone='orange'] .stat-value,
+:host[data-tone='yellow'] .stat-value { color: var(--color-amber); }
+:host[data-tone='orange'] .stat-glow,
+:host[data-tone='yellow'] .stat-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(251, 191, 36, 0.1) 0%, transparent 60%);
+}
+
+:host[data-tone='purple'] .stat-value { color: var(--color-violet); }
+:host[data-tone='purple'] .stat-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(167, 139, 250, 0.1) 0%, transparent 60%);
+}
+
+:host[data-tone='green'] .stat-value { color: var(--color-emerald); }
+:host[data-tone='green'] .stat-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(52, 211, 153, 0.1) 0%, transparent 60%);
+}
+
+:host[data-tone='cyan'] .stat-value { color: var(--color-cyan); }
+:host[data-tone='blue'] .stat-value { color: var(--color-cyan-vivid); }

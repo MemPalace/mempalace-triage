@@ -15,8 +15,8 @@ export type StatTone =
   styleUrl: './stat-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'card flex flex-col justify-between min-h-[104px] px-5 py-4 transition-colors hover:border-border-strong',
+    '[attr.data-tone]': 'tone()',
+    '[style.animation-delay]': 'animationDelay()',
   },
 })
 export class StatCard {
@@ -24,6 +24,7 @@ export class StatCard {
   readonly label = input.required<string>();
   readonly subtitle = input<string | null>(null);
   readonly tone = input<StatTone>('blue');
+  readonly index = input<number>(0);
 
-  protected readonly valueClass = computed(() => `text-accent-${this.tone()}`);
+  protected readonly animationDelay = computed(() => `${Math.min(this.index(), 10) * 40}ms`);
 }

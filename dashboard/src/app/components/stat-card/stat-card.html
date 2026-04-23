@@ -1,12 +1,10 @@
-<span
-  class="text-3xl font-bold tabular-nums leading-none"
-  [class]="valueClass()"
->
-  {{ value() ?? '—' }}
-</span>
-<div class="mt-3">
-  <div class="text-xs uppercase tracking-wider text-fg">{{ label() }}</div>
-  @if (subtitle(); as sub) {
-    <div class="text-[11px] text-fg-muted mt-0.5">{{ sub }}</div>
-  }
+<div class="stat-glow" aria-hidden="true"></div>
+<div class="relative flex flex-col h-full">
+  <div class="eyebrow mb-5">{{ label() }}</div>
+  <div class="mt-auto">
+    <div class="stat-value tabular-nums">{{ value() ?? '—' }}</div>
+    @if (subtitle(); as sub) {
+      <div class="text-[12px] text-muted mt-2 leading-snug">{{ sub }}</div>
+    }
+  </div>
 </div>

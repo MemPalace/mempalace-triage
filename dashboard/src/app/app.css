@@ -1,0 +1,6 @@
+.topbar {
+  background: rgba(8, 12, 24, 0.82);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid var(--color-border-soft);
+}
