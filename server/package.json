@@ -14,10 +14,10 @@
     "triage": "bun src/triage/cli.ts"
   },
   "dependencies": {
-    "elysia": "^1.1.25",
     "@elysiajs/cors": "^1.1.1",
     "@elysiajs/static": "^1.1.1",
-    "drizzle-orm": "^0.36.4"
+    "drizzle-orm": "^0.45.2",
+    "elysia": "^1.4.29"
   },
   "devDependencies": {
     "@types/bun": "^1.1.14",

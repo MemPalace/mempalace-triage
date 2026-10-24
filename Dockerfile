@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # ─── Stage 1: build the Angular dashboard ─────────────────────────────────────
-# Angular CLI requires Node ≥ 22.12; the Bun 1.2.5 image bundles 22.6, so we
+# Angular CLI requires Node ≥ 22.12, which the Bun images don't guarantee, so we
 # use a dedicated Node stage for the dashboard build. npm here (over bun) keeps
 # us aligned with the committed dashboard/package-lock.json.
 FROM node:22-alpine AS dashboard-build
@@ -12,16 +12,16 @@ COPY dashboard/ ./
 RUN npm run build
 
 # ─── Stage 2: install server runtime deps ─────────────────────────────────────
-FROM oven/bun:1.2.5 AS server-deps
+FROM oven/bun:1.4.3 AS server-deps
 WORKDIR /build
 COPY server/package.json server/bun.lock ./
 RUN bun install --frozen-lockfile --production
 
 # ─── Stage 3: runtime image ───────────────────────────────────────────────────
-FROM oven/bun:1.2.5-slim AS runtime
+FROM oven/bun:1.4.3-slim AS runtime
 
 ARG TARGETARCH
-ARG GH_VERSION=2.63.2
+ARG GH_VERSION=2.102.0
 
 # gh CLI is required by the triage poller (fetches issues/PRs/diffs).
 # Pull the matching static tarball for the target architecture — no apt repo.
